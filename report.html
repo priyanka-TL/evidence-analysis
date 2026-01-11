@@ -304,21 +304,6 @@
             font-weight: 600;
         }
 
-        .pie-charts {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .pie-chart-container {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -466,7 +451,7 @@
             max-height: 400px;
         }
 
-        #biharMap {
+        #stateMap {
             width: 100%;
             height: 500px;
             display: flex;
@@ -474,7 +459,7 @@
             align-items: center;
         }
 
-        #biharMap svg {
+        #stateMap svg {
             max-width: 100%;
             max-height: 100%;
         }
@@ -598,7 +583,7 @@
             </div>
             <div class="file-input-wrapper">
                 <input type="file" id="geojsonFile" accept=".geojson,.json">
-                <label for="geojsonFile" class="file-input-label">🗺️ Choose GeoJSON File (Optional)</label>
+                <label for="geojsonFile" class="file-input-label">🗺️ GeoJSON (Optional)</label>
             </div>
             <button class="btn-process" onclick="processCSV()">🔄 Process Data</button>
             <button class="btn-download" onclick="downloadPDF()" id="downloadBtn" disabled>📄 Download PDF</button>
@@ -681,12 +666,13 @@
                     <canvas id="submissionVolumeLine"></canvas>
                 </div>
 
-                <div class="pie-charts">
-                    <div class="pie-chart-container">
+                <!-- Subject & Grade Pie Charts - State Specific -->
+                <div id="subjectGradePieCharts" style="display: none;">
+                    <div class="chart-container">
                         <div class="chart-title">Subject Distribution</div>
                         <canvas id="subjectPie"></canvas>
                     </div>
-                    <div class="pie-chart-container">
+                    <div class="chart-container">
                         <div class="chart-title">Grade Distribution</div>
                         <canvas id="gradePie"></canvas>
                     </div>
@@ -696,7 +682,11 @@
             <div class="report-section section-to-break">
                 <h2 class="section-title">🎯 Quality & Relevance Analysis</h2>
                 <div class="table-responsive" id="relevanceTable"></div>
-                <div class="table-responsive" id="relBySubjectGrade"></div>
+                
+                <!-- Subject & Grade Analysis - State Specific -->
+                <div id="subjectGradeSection" class="hidden">
+                    <div class="table-responsive" id="relBySubjectGrade"></div>
+                </div>
                 
                 <div class="chart-container">
                     <div class="chart-title">Task Completion Analysis</div>
@@ -704,13 +694,13 @@
                 </div>
             </div>
 
-            <div class="report-section"> 
+            <div class="report-section">
                 <h2 class="section-title">🗺️ District-wise Submission Quality & Insights</h2>
                 <div class="table-responsive" id="districtTable"></div>
-                
+
                 <div class="chart-container">
-                    <div class="chart-title">Bihar District Relevance Map</div>
-                    <div id="biharMap" style="min-height: 400px; display: flex; justify-content: center; align-items: center; background-color: #eef; border-radius: 8px;">
+                    <div class="chart-title" id="stateMapTitle">State District Relevance Map</div>
+                    <div id="stateMap" style="min-height: 400px; display: flex; justify-content: center; align-items: center; background-color: #eef; border-radius: 8px;">
                         <span class="text-gray-500">Map placeholder area</span>
                     </div>
                     <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap; font-size: 14px;">
@@ -732,8 +722,62 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
+
+            <!-- ENROLLMENT ANALYTICS SECTION (Only shown if enrollment data exists) -->
+            <div class="report-section hidden" id="enrollmentSection">
+                <h2 class="section-title">📈 Enrollment Growth Analysis</h2>
+
+                <!-- Enrollment Summary Cards -->
+                <div class="grid grid-4" id="enrollmentSummary"></div>
+
+                <!-- Enrollment Trend Chart -->
+                <div class="chart-container">
+                    <div class="chart-title">Enrollment Comparison: 2024 vs 2025</div>
+                    <canvas id="enrollmentComparisonChart"></canvas>
+                </div>
+
+                <!-- Enrollment Growth Chart -->
+                <div class="chart-container">
+                    <div class="chart-title">Top 10 Districts by Enrollment Growth</div>
+                    <canvas id="enrollmentGrowthChart"></canvas>
+                </div>
+
+                <!-- District-wise Enrollment Table -->
+                <h3 style="font-size: 1.5em; margin: 30px 0 20px 0; color: #4a5568;">District / Block / School Enrollment Details</h3>
+                <div class="table-responsive" id="enrollmentTable"></div>
+            </div>
+
+            <!-- USER-OWNED TASKS SECTION (State-specific: Haryana) -->
+            <div class="report-section hidden" id="userOwnedTasksSection">
+                <h2 class="section-title">👤 User-Owned Custom Tasks Analysis</h2>
+                <p style="text-align: center; color: #718096; margin-bottom: 20px;">
+                    Tasks created by users that are not part of the standard question sheet
+                </p>
+
+                <!-- Custom Tasks Summary Cards -->
+                <div class="grid grid-4" id="customTasksSummary"></div>
+
+                <!-- Custom Tasks Distribution Chart -->
+                <div class="chart-container">
+                    <div class="chart-title">Top 10 Most Common User-Owned Tasks</div>
+                    <canvas id="customTasksChart"></canvas>
+                </div>
+
+                <!-- User Activity Chart -->
+                <div class="chart-container">
+                    <div class="chart-title">User Engagement: Custom Task Creation by District</div>
+                    <canvas id="customTasksDistrictChart"></canvas>
+                </div>
+
+                <!-- Hierarchical Custom Tasks Breakdown -->
+                <h3 style="font-size: 1.5em; margin: 30px 0 20px 0; color: #4a5568;">
+                    📊 District-wise Custom Tasks Breakdown
+                </h3>
+                <div class="table-responsive" id="customTasksTable"></div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -749,6 +793,12 @@
         school: '',
         relevance: ''
     };
+
+    // Check if a task is user-owned (custom) based on Task Type column
+    function isUserOwnedTask(row) {
+        const taskType = row["Task Type"];
+        return taskType && taskType !== "Standard";
+    }
 
     // Utility functions (unchanged)
     function getTimelineSettings(minDate, maxDate) {
@@ -797,7 +847,16 @@
         document.getElementById('loading').style.display = 'block';
         document.getElementById('report').classList.add('hidden');
         document.getElementById('filterSection').classList.remove('active');
+
+        // Clear enrollment and custom tasks sections to remove stale data
+        document.getElementById('enrollmentSection').classList.add('hidden');
+        document.getElementById('enrollmentSummary').innerHTML = '';
+        document.getElementById('enrollmentTable').innerHTML = '';
+        document.getElementById('userOwnedTasksSection').classList.add('hidden');
+        document.getElementById('customTasksSummary').innerHTML = '';
+        document.getElementById('customTasksTable').innerHTML = '';
         
+        // Parse the CSV (no need for questions file - using Task Type column from CSV)
         Papa.parse(file, {
             header: true,
             skipEmptyLines: true,
@@ -960,6 +1019,10 @@
 
     function generateReport(data) {
         const totalEvidence = data.length;
+        
+        // Detect state(s) early for state-specific features
+        const statesInDataUpper = new Set(data.map(row => (row["Declared State"] || "").trim().toUpperCase()));
+        
         const relevanceCounts = { Relevant:0, "Partially Relevant":0, Irrelevant:0 };
         const userSet = new Set();
         const schoolSet = new Set();
@@ -971,6 +1034,8 @@
         const taskCounts = {};
         const districtStats = {};
         const blockStats = {};
+        const enrollmentStats = {};  // NEW: For enrollment data
+        let hasEnrollmentData = false;  // NEW: Track if enrollment data exists
         let minDate = new Date('2100-01-01');
         let maxDate = new Date('1970-01-01');
         const timelines = {
@@ -1031,33 +1096,107 @@
             const dist = row["District"] || "Unknown";
             const blk = row["Block"] || "Unknown";
             const school = row["School Name"] || "Unknown";
-            
-            if (!districtStats[dist]) { 
-                districtStats[dist] = { 
-                    total:0, 
-                    Relevant:0, 
-                    "Partially Relevant":0, 
-                    Irrelevant:0, 
-                    blocks: new Set(), 
-                    schools: new Set() 
-                }; 
+
+            if (!districtStats[dist]) {
+                districtStats[dist] = {
+                    total:0,
+                    Relevant:0,
+                    "Partially Relevant":0,
+                    Irrelevant:0,
+                    blocks: new Set(),
+                    schools: new Set()
+                };
             }
             districtStats[dist].total++;
             districtStats[dist].blocks.add(blk);
             districtStats[dist].schools.add(school);
             if (rel && districtStats[dist][rel] !== undefined) districtStats[dist][rel]++;
-            
+
             const keyBlk = blk;
-            if (!blockStats[keyBlk]) { 
-                blockStats[keyBlk] = { 
-                    total:0, 
-                    Relevant:0, 
-                    schools: new Set() 
-                }; 
+            if (!blockStats[keyBlk]) {
+                blockStats[keyBlk] = {
+                    total:0,
+                    Relevant:0,
+                    schools: new Set()
+                };
             }
             blockStats[keyBlk].total++;
             blockStats[keyBlk].schools.add(school);
             if (rel === "Relevant") blockStats[keyBlk].Relevant++;
+
+            // NEW: Collect enrollment data
+            const enrollment2024 = parseFloat(row["Enrollment_2024"]) || null;
+            const enrollment2025 = parseFloat(row["Enrollment_2025"]) || null;
+            const enrollmentIncrease = parseFloat(row["Enrollment_Increase_Percentage"]) || null;
+
+            if (enrollment2024 !== null || enrollment2025 !== null || enrollmentIncrease !== null) {
+                hasEnrollmentData = true;
+                if (Object.keys(enrollmentStats).length < 3) {
+                    console.log('Enrollment data found:', { dist, school, enrollment2024, enrollment2025, enrollmentIncrease });
+                }
+
+                if (!enrollmentStats[dist]) {
+                    enrollmentStats[dist] = {
+                        enrollment2024: 0,
+                        enrollment2025: 0,
+                        count2024: 0,
+                        count2025: 0,
+                        increaseSum: 0,
+                        increaseCount: 0,
+                        blocks: {}
+                    };
+                }
+
+                if (!enrollmentStats[dist].blocks[blk]) {
+                    enrollmentStats[dist].blocks[blk] = {
+                        enrollment2024: 0,
+                        enrollment2025: 0,
+                        count2024: 0,
+                        count2025: 0,
+                        increaseSum: 0,
+                        increaseCount: 0,
+                        schools: {}
+                    };
+                }
+
+                if (!enrollmentStats[dist].blocks[blk].schools[school]) {
+                    enrollmentStats[dist].blocks[blk].schools[school] = {
+                        enrollment2024: 0,
+                        enrollment2025: 0,
+                        count2024: 0,
+                        count2025: 0,
+                        increaseSum: 0,
+                        increaseCount: 0
+                    };
+                }
+
+                if (enrollment2024 !== null) {
+                    enrollmentStats[dist].enrollment2024 += enrollment2024;
+                    enrollmentStats[dist].count2024++;
+                    enrollmentStats[dist].blocks[blk].enrollment2024 += enrollment2024;
+                    enrollmentStats[dist].blocks[blk].count2024++;
+                    enrollmentStats[dist].blocks[blk].schools[school].enrollment2024 += enrollment2024;
+                    enrollmentStats[dist].blocks[blk].schools[school].count2024++;
+                }
+
+                if (enrollment2025 !== null) {
+                    enrollmentStats[dist].enrollment2025 += enrollment2025;
+                    enrollmentStats[dist].count2025++;
+                    enrollmentStats[dist].blocks[blk].enrollment2025 += enrollment2025;
+                    enrollmentStats[dist].blocks[blk].count2025++;
+                    enrollmentStats[dist].blocks[blk].schools[school].enrollment2025 += enrollment2025;
+                    enrollmentStats[dist].blocks[blk].schools[school].count2025++;
+                }
+
+                if (enrollmentIncrease !== null) {
+                    enrollmentStats[dist].increaseSum += enrollmentIncrease;
+                    enrollmentStats[dist].increaseCount++;
+                    enrollmentStats[dist].blocks[blk].increaseSum += enrollmentIncrease;
+                    enrollmentStats[dist].blocks[blk].increaseCount++;
+                    enrollmentStats[dist].blocks[blk].schools[school].increaseSum += enrollmentIncrease;
+                    enrollmentStats[dist].blocks[blk].schools[school].increaseCount++;
+                }
+            }
         });
 
         if (minDate > maxDate) { minDate = null; maxDate = null; }
@@ -1110,7 +1249,9 @@
 
         // Charts
         const labels = Array.from(new Set([...Object.keys(monthlyStart), ...Object.keys(monthlyCompletion)])).sort();
-        if(window.projectTimelineChart) window.projectTimelineChart.destroy();
+        if (window.projectTimelineChart && typeof window.projectTimelineChart.destroy === 'function') {
+            window.projectTimelineChart.destroy();
+        }
         window.projectTimelineChart = new Chart(document.getElementById('monthlyLine'), { 
             type: 'line', 
             data: { 
@@ -1146,7 +1287,9 @@
         });
 
         const subLabels = Array.from(new Set([...Object.keys(submissionVolume), ...Object.keys(relevantVolume)])).sort();
-        if(window.submissionVolumeChart) window.submissionVolumeChart.destroy();
+        if (window.submissionVolumeChart && typeof window.submissionVolumeChart.destroy === 'function') {
+            window.submissionVolumeChart.destroy();
+        }
         window.submissionVolumeChart = new Chart(document.getElementById('submissionVolumeLine'), { 
             type: 'line', 
             data: { 
@@ -1181,43 +1324,79 @@
             } 
         });
 
-        if(window.subjectPieChart) window.subjectPieChart.destroy();
-        window.subjectPieChart = new Chart(document.getElementById('subjectPie'), { 
-            type: 'doughnut', 
-            data: { 
-                labels: Object.keys(subjects), 
-                datasets: [{ 
-                    data: Object.values(subjects), 
-                    backgroundColor: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'], 
-                    borderWidth: 0 
-                }] 
-            }, 
-            options: { 
-                animation: false, 
-                responsive: true, 
-                cutout: '60%', 
-                plugins: { legend: { position: 'bottom' } } 
-            } 
-        });
+        // Subject & Grade Pie Charts (State-specific: Bihar only)
+        const subjectGradeChartStates = ["BIHAR"];
+        const shouldShowSubjectGradeCharts = Array.from(statesInDataUpper).some(state => 
+            subjectGradeChartStates.includes(state)
+        );
 
-        if(window.gradePieChart) window.gradePieChart.destroy();
-        window.gradePieChart = new Chart(document.getElementById('gradePie'), { 
-            type: 'doughnut', 
-            data: { 
-                labels: Object.keys(grades), 
-                datasets: [{ 
-                    data: Object.values(grades), 
-                    backgroundColor: ['#a8e6cf', '#dcedc1', '#ffd3a5', '#fd9853', '#ff8a80'], 
-                    borderWidth: 0 
-                }] 
-            }, 
-            options: { 
-                animation: false, 
-                responsive: true, 
-                cutout: '60%', 
-                plugins: { legend: { position: 'bottom' } } 
-            } 
-        });
+        if (shouldShowSubjectGradeCharts) {
+            document.getElementById('subjectGradePieCharts').style.display = 'block';
+
+            if (window.subjectPieChart && typeof window.subjectPieChart.destroy === 'function') {
+                window.subjectPieChart.destroy();
+            }
+            window.subjectPieChart = new Chart(document.getElementById('subjectPie'), { 
+                type: 'doughnut', 
+                data: { 
+                    labels: Object.keys(subjects), 
+                    datasets: [{ 
+                        data: Object.values(subjects), 
+                        backgroundColor: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'], 
+                        borderWidth: 0 
+                    }] 
+                }, 
+                options: { 
+                    animation: false, 
+                    responsive: true, 
+                    maintainAspectRatio: true,
+                    aspectRatio: 2,
+                    cutout: '60%', 
+                    plugins: { 
+                        legend: { 
+                            position: 'bottom',
+                            labels: { 
+                                font: { size: 12 },
+                                padding: 15
+                            }
+                        } 
+                    } 
+                } 
+            });
+
+            if (window.gradePieChart && typeof window.gradePieChart.destroy === 'function') {
+                window.gradePieChart.destroy();
+            }
+            window.gradePieChart = new Chart(document.getElementById('gradePie'), { 
+                type: 'doughnut', 
+                data: { 
+                    labels: Object.keys(grades), 
+                    datasets: [{ 
+                        data: Object.values(grades), 
+                        backgroundColor: ['#a8e6cf', '#dcedc1', '#ffd3a5', '#fd9853', '#ff8a80'], 
+                        borderWidth: 0 
+                    }] 
+                }, 
+                options: { 
+                    animation: false, 
+                    responsive: true, 
+                    maintainAspectRatio: true,
+                    aspectRatio: 2,
+                    cutout: '60%', 
+                    plugins: { 
+                        legend: { 
+                            position: 'bottom',
+                            labels: { 
+                                font: { size: 12 },
+                                padding: 15
+                            }
+                        } 
+                    } 
+                } 
+            });
+        } else {
+            document.getElementById('subjectGradePieCharts').style.display = 'none';
+        }
 
         // Relevance Table
         document.getElementById('relevanceTable').innerHTML = `
@@ -1241,55 +1420,67 @@
             </table>
         `;
 
-        // Relevance by Subject & Grade
-        let relSG = {};
-        data.forEach(row => { 
-            const subj = parseSubject(row["Tasks"]); 
-            const grade = parseGrade(row["Tasks"]); 
-            const key = subj+"_"+grade; 
-            if (!relSG[key]) relSG[key] = { Relevant:0, "Partially Relevant":0, Irrelevant:0, total:0 }; 
-            relSG[key].total++; 
-            const rel = row["Relevance Tag"]; 
-            if (rel && relSG[key][rel] !== undefined) relSG[key][rel]++; 
-        });
+        // Relevance by Subject & Grade (State-specific: Bihar only)
+        const subjectGradeStates = ["BIHAR"]; // States that use subject/grade tracking
+        const shouldShowSubjectGrade = Array.from(statesInDataUpper).some(state => 
+            subjectGradeStates.includes(state)
+        );
 
-        let relSGHtml = `
-            <table>
-                <thead>
+        if (shouldShowSubjectGrade) {
+            let relSG = {};
+            data.forEach(row => { 
+                const subj = parseSubject(row["Tasks"]); 
+                const grade = parseGrade(row["Tasks"]); 
+                const key = subj+"_"+grade; 
+                if (!relSG[key]) relSG[key] = { Relevant:0, "Partially Relevant":0, Irrelevant:0, total:0 }; 
+                relSG[key].total++; 
+                const rel = row["Relevance Tag"]; 
+                if (rel && relSG[key][rel] !== undefined) relSG[key][rel]++; 
+            });
+
+            let relSGHtml = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Grade</th>
+                            <th>Relevant</th>
+                            <th>Partially Relevant</th>
+                            <th>Irrelevant</th>
+                            <th>Total</th>
+                            <th>% Relevant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            const sortedSG = Object.keys(relSG).sort();
+            for (const k of sortedSG) { 
+                const [s,g] = k.split("_"); 
+                const r = relSG[k]; 
+                const relevantPercent = r.total > 0 ? ((r.Relevant/r.total)*100).toFixed(1) : 0; 
+                relSGHtml += `
                     <tr>
-                        <th>Subject</th>
-                        <th>Grade</th>
-                        <th>Relevant</th>
-                        <th>Partially Relevant</th>
-                        <th>Irrelevant</th>
-                        <th>Total</th>
-                        <th>% Relevant</th>
+                        <td>${s}</td>
+                        <td>${g}</td>
+                        <td>${r.Relevant}</td>
+                        <td>${r["Partially Relevant"]}</td>
+                        <td>${r.Irrelevant}</td>
+                        <td>${r.total}</td>
+                        <td><span class="percentage-badge">${relevantPercent}%</span></td>
                     </tr>
-                </thead>
-                <tbody>
-        `;
-        const sortedSG = Object.keys(relSG).sort();
-        for (const k of sortedSG) { 
-            const [s,g] = k.split("_"); 
-            const r = relSG[k]; 
-            const relevantPercent = r.total > 0 ? ((r.Relevant/r.total)*100).toFixed(1) : 0; 
-            relSGHtml += `
-                <tr>
-                    <td>${s}</td>
-                    <td>${g}</td>
-                    <td>${r.Relevant}</td>
-                    <td>${r["Partially Relevant"]}</td>
-                    <td>${r.Irrelevant}</td>
-                    <td>${r.total}</td>
-                    <td><span class="percentage-badge">${relevantPercent}%</span></td>
-                </tr>
-            `; 
+                `; 
+            }
+            relSGHtml += "</tbody></table>";
+            document.getElementById('relBySubjectGrade').innerHTML = relSGHtml;
+            document.getElementById('subjectGradeSection').classList.remove('hidden');
+        } else {
+            document.getElementById('subjectGradeSection').classList.add('hidden');
         }
-        relSGHtml += "</tbody></table>";
-        document.getElementById('relBySubjectGrade').innerHTML = relSGHtml;
 
         // Task Completion Chart
-        if(window.taskCompletionChart) window.taskCompletionChart.destroy();
+        if (window.taskCompletionChart && typeof window.taskCompletionChart.destroy === 'function') {
+            window.taskCompletionChart.destroy();
+        }
         window.taskCompletionChart = new Chart(document.getElementById('taskCompletionBar'), { 
             type: 'bar', 
             data: { 
@@ -1456,51 +1647,733 @@
         document.getElementById('districtTable').innerHTML = distHtml;
 
         window.currentDistrictStats = districtStats;
-        generateBiharMap(districtStats);
+        
+        // Detect primary state from data
+        const statesInData = Array.from(new Set(data.map(row => (row["Declared State"] || "").trim())));
+        const primaryState = statesInData.length > 0 ? statesInData[0] : "Bihar";
+        
+        generateStateMap(districtStats, primaryState);
+
+        // NEW: Generate enrollment analytics if data exists AND state requires it
+        // statesInDataUpper already defined at top of function
+        const enrollmentStates = ["HARYANA", "HIMACHAL PRADESH", "PUNJAB"]; // States that need enrollment tracking
+        const shouldShowEnrollment = Array.from(statesInDataUpper).some(state => 
+            enrollmentStates.includes(state)
+        );
+
+        console.log('Enrollment check:', { 
+            hasEnrollmentData, 
+            districtCount: Object.keys(enrollmentStats).length,
+            statesInData: Array.from(statesInData),
+            shouldShowEnrollment 
+        });
+
+        if (hasEnrollmentData && Object.keys(enrollmentStats).length > 0 && shouldShowEnrollment) {
+            generateEnrollmentAnalytics(enrollmentStats);
+        } else {
+            // Hide enrollment section if no data or state doesn't require it
+            console.log('Hiding enrollment section - ', 
+                !hasEnrollmentData ? 'no data found' : 
+                !shouldShowEnrollment ? 'state does not require enrollment tracking' : 
+                'insufficient enrollment data');
+            document.getElementById('enrollmentSection').classList.add('hidden');
+        }
+
+        // NEW: Custom Tasks Analysis (State-specific: Haryana)
+        const customTaskStates = ["HARYANA"];
+        const shouldShowCustomTasks = Array.from(statesInDataUpper).some(state => 
+            customTaskStates.includes(state)
+        );
+
+        console.log('Custom tasks check:', {
+            statesInData: Array.from(statesInData),
+            shouldShowCustomTasks
+        });
+
+        if (shouldShowCustomTasks) {
+            generateCustomTasksAnalysis(data);
+        } else {
+            console.log('Hiding custom tasks section - state does not require custom task tracking');
+            document.getElementById('userOwnedTasksSection').classList.add('hidden');
+        }
     }
 
-    // Map functions (unchanged)
-    function generateBiharMap(districtStats) {
+    // NEW: Custom Tasks Analysis Generation
+    function generateCustomTasksAnalysis(data) {
+        const customTaskStats = {
+            totalCustomTasks: 0,
+            uniqueTaskTypes: {},
+            userCounts: {},
+            districtCounts: {},
+            blockCounts: {},
+            schoolCounts: {},
+            detailedTasks: []
+        };
+
+        data.forEach(row => {
+            // Check if this is a user-owned task using Task Type column
+            if (isUserOwnedTask(row)) {
+                customTaskStats.totalCustomTasks++;
+                
+                const taskName = row["Tasks"] || "Unknown Task";
+                const originalTask = String(taskName).trim();
+                
+                // Count by task type
+                if (!customTaskStats.uniqueTaskTypes[originalTask]) {
+                    customTaskStats.uniqueTaskTypes[originalTask] = {
+                        count: 0,
+                        users: new Set(),
+                        schools: new Set(),
+                        districts: new Set()
+                    };
+                }
+                customTaskStats.uniqueTaskTypes[originalTask].count++;
+                customTaskStats.uniqueTaskTypes[originalTask].users.add(row["UUID"]);
+                customTaskStats.uniqueTaskTypes[originalTask].schools.add(row["School Name"]);
+                customTaskStats.uniqueTaskTypes[originalTask].districts.add(row["District"]);
+                
+                // Count by district
+                const district = row["District"] || "Unknown";
+                customTaskStats.districtCounts[district] = (customTaskStats.districtCounts[district] || 0) + 1;
+                
+                // Count by block
+                const block = row["Block"] || "Unknown";
+                const blockKey = `${district} - ${block}`;
+                customTaskStats.blockCounts[blockKey] = (customTaskStats.blockCounts[blockKey] || 0) + 1;
+                
+                // Count by school
+                const school = row["School Name"] || "Unknown";
+                const schoolKey = `${district} - ${block} - ${school}`;
+                customTaskStats.schoolCounts[schoolKey] = (customTaskStats.schoolCounts[schoolKey] || 0) + 1;
+                
+                // Count by user
+                const userId = row["UUID"];
+                customTaskStats.userCounts[userId] = (customTaskStats.userCounts[userId] || 0) + 1;
+                
+                // Store detailed record
+                customTaskStats.detailedTasks.push({
+                    task: originalTask,
+                    district: district,
+                    block: block,
+                    school: school,
+                    user: userId,
+                    userType: row["User sub type"] || "Unknown",
+                    evidence: row["Task Evidence"] || "No evidence",
+                    remarks: row["Task Remarks"] || "No remarks"
+                });
+            }
+        });
+
+        if (customTaskStats.totalCustomTasks === 0) {
+            console.log('No custom tasks found in data');
+            document.getElementById('userOwnedTasksSection').classList.add('hidden');
+            return;
+        }
+
+        // Show custom tasks section
+        document.getElementById('userOwnedTasksSection').classList.remove('hidden');
+
+        const uniqueUsers = Object.keys(customTaskStats.userCounts).length;
+        const uniqueDistricts = Object.keys(customTaskStats.districtCounts).length;
+        const uniqueTaskTypes = Object.keys(customTaskStats.uniqueTaskTypes).length;
+        const avgTasksPerUser = uniqueUsers > 0 ? (customTaskStats.totalCustomTasks / uniqueUsers).toFixed(2) : 0;
+
+        // Summary Cards
+        document.getElementById('customTasksSummary').innerHTML = `
+            <div class="card">
+                <div class="metric-label">Total Custom Tasks</div>
+                <div class="big-number">${customTaskStats.totalCustomTasks.toLocaleString()}</div>
+            </div>
+            <div class="card">
+                <div class="metric-label">Unique Task Types</div>
+                <div class="big-number">${uniqueTaskTypes}</div>
+            </div>
+            <div class="card">
+                <div class="metric-label">Active Users</div>
+                <div class="big-number">${uniqueUsers}</div>
+            </div>
+            <div class="card">
+                <div class="metric-label">Avg Tasks/User</div>
+                <div class="big-number">${avgTasksPerUser}</div>
+            </div>
+        `;
+
+        // Top 10 Custom Tasks Chart
+        const sortedTasks = Object.entries(customTaskStats.uniqueTaskTypes)
+            .sort((a, b) => b[1].count - a[1].count)
+            .slice(0, 10);
+
+        if (window.customTasksChart && typeof window.customTasksChart.destroy === 'function') {
+            window.customTasksChart.destroy();
+        }
+        window.customTasksChart = new Chart(document.getElementById('customTasksChart'), {
+            type: 'bar',
+            data: {
+                labels: sortedTasks.map(([task]) => task.substring(0, 40) + (task.length > 40 ? '...' : '')),
+                datasets: [{
+                    label: 'Occurrences',
+                    data: sortedTasks.map(([_, stats]) => stats.count),
+                    backgroundColor: 'rgba(79, 172, 254, 0.8)',
+                    borderColor: 'rgba(79, 172, 254, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                animation: false,
+                responsive: true,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.1)' } },
+                    y: { grid: { color: 'rgba(0,0,0,0.1)' } }
+                }
+            }
+        });
+
+        // District Distribution Chart
+        const sortedDistricts = Object.entries(customTaskStats.districtCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+
+        if (window.customTasksDistrictChart && typeof window.customTasksDistrictChart.destroy === 'function') {
+            window.customTasksDistrictChart.destroy();
+        }
+        window.customTasksDistrictChart = new Chart(document.getElementById('customTasksDistrictChart'), {
+            type: 'bar',
+            data: {
+                labels: sortedDistricts.map(([district]) => district),
+                datasets: [{
+                    label: 'Custom Tasks',
+                    data: sortedDistricts.map(([_, count]) => count),
+                    backgroundColor: 'rgba(66, 230, 149, 0.8)',
+                    borderColor: 'rgba(66, 230, 149, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                animation: false,
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.1)' } },
+                    x: { grid: { color: 'rgba(0,0,0,0.1)' } }
+                }
+            }
+        });
+
+        // Build hierarchical structure matching District-wise Submission Quality style
+        const hierarchicalTasks = {};
+
+        customTaskStats.detailedTasks.forEach(item => {
+            const dist = item.district || "Unknown";
+            const blk = item.block || "Unknown";
+            const school = item.school || "Unknown";
+            const task = item.task || "Unknown Task";
+
+            if (!hierarchicalTasks[dist]) {
+                hierarchicalTasks[dist] = {
+                    total: 0,
+                    uniqueTasks: new Set(),
+                    blocks: {}
+                };
+            }
+
+            if (!hierarchicalTasks[dist].blocks[blk]) {
+                hierarchicalTasks[dist].blocks[blk] = {
+                    total: 0,
+                    uniqueTasks: new Set(),
+                    schools: {}
+                };
+            }
+
+            if (!hierarchicalTasks[dist].blocks[blk].schools[school]) {
+                hierarchicalTasks[dist].blocks[blk].schools[school] = {
+                    total: 0,
+                    tasks: {}
+                };
+            }
+
+            if (!hierarchicalTasks[dist].blocks[blk].schools[school].tasks[task]) {
+                hierarchicalTasks[dist].blocks[blk].schools[school].tasks[task] = {
+                    count: 0,
+                    users: new Set(),
+                    userTypes: new Set()
+                };
+            }
+
+            hierarchicalTasks[dist].total++;
+            hierarchicalTasks[dist].uniqueTasks.add(task);
+            hierarchicalTasks[dist].blocks[blk].total++;
+            hierarchicalTasks[dist].blocks[blk].uniqueTasks.add(task);
+            hierarchicalTasks[dist].blocks[blk].schools[school].total++;
+            hierarchicalTasks[dist].blocks[blk].schools[school].tasks[task].count++;
+            hierarchicalTasks[dist].blocks[blk].schools[school].tasks[task].users.add(item.user);
+            hierarchicalTasks[dist].blocks[blk].schools[school].tasks[task].userTypes.add(item.userType);
+        });
+
+        // Generate table HTML matching District-wise style
+        let tableHtml = `
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">DISTRICT / BLOCK / SCHOOL</th>
+                        <th>TOTAL TASKS</th>
+                        <th>BLOCKS/SCHOOLS</th>
+                        <th>UNIQUE TASK TYPES</th>
+                        <th>CUSTOM TASK DETAILS</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        const sortedTaskDistricts = Object.keys(hierarchicalTasks).sort();
+
+        for (const dist of sortedTaskDistricts) {
+            const distData = hierarchicalTasks[dist];
+            const blockCount = Object.keys(distData.blocks).length;
+            const schoolCount = new Set(
+                Object.values(distData.blocks).flatMap(b => Object.keys(b.schools))
+            ).size;
+
+            // District row
+            tableHtml += `
+                <tr class="district-row" onclick="toggleCustomTaskDistrict('${dist.replace(/'/g, "\\'")}')">
+                    <td class="clickable-cell">
+                        <div class="expandable-name">
+                            <span class="expand-arrow" id="arrow-ct-dist-${dist.replace(/[^a-zA-Z0-9]/g, '_')}"></span>
+                            <strong>${dist}</strong>
+                        </div>
+                    </td>
+                    <td>${distData.total.toLocaleString()}</td>
+                    <td>${blockCount} blocks / ${schoolCount} schools</td>
+                    <td>${distData.uniqueTasks.size}</td>
+                    <td>${Array.from(distData.uniqueTasks).slice(0, 2).join(', ')}${distData.uniqueTasks.size > 2 ? '...' : ''}</td>
+                </tr>
+            `;
+
+            // Block rows (initially hidden)
+            const sortedBlocks = Object.keys(distData.blocks).sort();
+            for (const blk of sortedBlocks) {
+                const blockData = distData.blocks[blk];
+                const blockSchoolCount = Object.keys(blockData.schools).length;
+
+                tableHtml += `
+                    <tr class="block-row hidden-row ct-district-${dist.replace(/[^a-zA-Z0-9]/g, '_')}" onclick="toggleCustomTaskBlock(event, '${dist.replace(/'/g, "\\'")}', '${blk.replace(/'/g, "\\'")}')">
+                        <td class="clickable-cell indent-1">
+                            <div class="expandable-name">
+                                <span class="expand-arrow" id="arrow-ct-block-${dist.replace(/[^a-zA-Z0-9]/g, '_')}-${blk.replace(/[^a-zA-Z0-9]/g, '_')}"></span>
+                                <strong>${blk}</strong>
+                            </div>
+                        </td>
+                        <td>${blockData.total.toLocaleString()}</td>
+                        <td>${blockSchoolCount} schools</td>
+                        <td>${blockData.uniqueTasks.size}</td>
+                        <td>${Array.from(blockData.uniqueTasks).slice(0, 2).join(', ')}${blockData.uniqueTasks.size > 2 ? '...' : ''}</td>
+                    </tr>
+                `;
+
+                // School rows (initially hidden)
+                const sortedSchools = Object.keys(blockData.schools).sort();
+                for (const school of sortedSchools) {
+                    const schoolData = blockData.schools[school];
+                    const taskList = Object.entries(schoolData.tasks)
+                        .map(([task, data]) => `${task} (${data.count}×)`)
+                        .join(', ');
+
+                    tableHtml += `
+                        <tr class="school-row hidden-row ct-block-${dist.replace(/[^a-zA-Z0-9]/g, '_')}-${blk.replace(/[^a-zA-Z0-9]/g, '_')}">
+                            <td class="indent-2">${school}</td>
+                            <td>${schoolData.total.toLocaleString()}</td>
+                            <td>-</td>
+                            <td>${Object.keys(schoolData.tasks).length}</td>
+                            <td style="text-align: left; font-size: 0.9em;">${taskList}</td>
+                        </tr>
+                    `;
+                }
+            }
+        }
+
+        tableHtml += "</tbody></table>";
+        document.getElementById('customTasksTable').innerHTML = tableHtml;
+
+        // Export functionality - store data for download
+        window.customTasksData = customTaskStats.detailedTasks;
+    }
+
+    // Function to export custom tasks to CSV
+    // Export custom tasks function removed - use processor/6-user-owned-tasks-analyzer.py instead
+
+    // NEW: Enrollment Analytics Generation
+    function generateEnrollmentAnalytics(enrollmentStats) {
+        // Show enrollment section
+        document.getElementById('enrollmentSection').classList.remove('hidden');
+
+        // Calculate aggregated metrics
+        let totalEnrollment2024 = 0;
+        let totalEnrollment2025 = 0;
+        let avgIncreaseSum = 0;
+        let avgIncreaseCount = 0;
+        let schoolsWithIncrease = 0;
+        let schoolsWithDecrease = 0;
+
+        Object.values(enrollmentStats).forEach(distData => {
+            totalEnrollment2024 += distData.enrollment2024;
+            totalEnrollment2025 += distData.enrollment2025;
+            avgIncreaseSum += distData.increaseSum;
+            avgIncreaseCount += distData.increaseCount;
+        });
+
+        const overallIncrease = totalEnrollment2024 > 0
+            ? ((totalEnrollment2025 - totalEnrollment2024) / totalEnrollment2024 * 100).toFixed(2)
+            : 0;
+        const avgIncreasePercentage = avgIncreaseCount > 0
+            ? (avgIncreaseSum / avgIncreaseCount).toFixed(2)
+            : 0;
+
+        // Enrollment Summary Cards
+        document.getElementById('enrollmentSummary').innerHTML = `
+            <div class="card">
+                <div class="metric-label">Total Enrollment 2024</div>
+                <div class="big-number">${totalEnrollment2024.toLocaleString()}</div>
+            </div>
+            <div class="card">
+                <div class="metric-label">Total Enrollment 2025</div>
+                <div class="big-number">${totalEnrollment2025.toLocaleString()}</div>
+            </div>
+            <div class="card">
+                <div class="metric-label">Overall Growth</div>
+                <div class="big-number" style="color: ${overallIncrease >= 0 ? '#42e695' : '#ff6b6b'}">
+                    ${overallIncrease >= 0 ? '+' : ''}${overallIncrease}%
+                </div>
+                <div style="color: #718096; font-size: 0.9em;">
+                    ${(totalEnrollment2025 - totalEnrollment2024 >= 0 ? '+' : '')}${(totalEnrollment2025 - totalEnrollment2024).toLocaleString()} students
+                </div>
+            </div>
+            <div class="card">
+                <div class="metric-label">Avg Increase per MIP</div>
+                <div class="big-number" style="color: ${avgIncreasePercentage >= 0 ? '#42e695' : '#ff6b6b'}">
+                    ${avgIncreasePercentage >= 0 ? '+' : ''}${avgIncreasePercentage}%
+                </div>
+            </div>
+        `;
+
+        // Enrollment Comparison Chart
+        const districtLabels = Object.keys(enrollmentStats).sort();
+        const enrollment2024Data = districtLabels.map(dist => enrollmentStats[dist].enrollment2024);
+        const enrollment2025Data = districtLabels.map(dist => enrollmentStats[dist].enrollment2025);
+
+        if (window.enrollmentComparisonChart && typeof window.enrollmentComparisonChart.destroy === 'function') {
+            window.enrollmentComparisonChart.destroy();
+        }
+        window.enrollmentComparisonChart = new Chart(document.getElementById('enrollmentComparisonChart'), {
+            type: 'bar',
+            data: {
+                labels: districtLabels,
+                datasets: [
+                    {
+                        label: '2024 Enrollment',
+                        data: enrollment2024Data,
+                        backgroundColor: 'rgba(79, 172, 254, 0.6)',
+                        borderColor: '#4facfe',
+                        borderWidth: 2
+                    },
+                    {
+                        label: '2025 Enrollment',
+                        data: enrollment2025Data,
+                        backgroundColor: 'rgba(66, 230, 149, 0.6)',
+                        borderColor: '#42e695',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                animation: false,
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.1)' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Enrollment Growth Chart (Top 10 Districts)
+        const districtGrowth = districtLabels.map(dist => {
+            const stats = enrollmentStats[dist];
+            const growth = stats.enrollment2024 > 0
+                ? ((stats.enrollment2025 - stats.enrollment2024) / stats.enrollment2024 * 100)
+                : 0;
+            return { district: dist, growth: growth };
+        });
+        districtGrowth.sort((a, b) => b.growth - a.growth);
+        const top10 = districtGrowth.slice(0, 10);
+
+        if (window.enrollmentGrowthChart && typeof window.enrollmentGrowthChart.destroy === 'function') {
+            window.enrollmentGrowthChart.destroy();
+        }
+        window.enrollmentGrowthChart = new Chart(document.getElementById('enrollmentGrowthChart'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: top10.map(d => d.district),
+                datasets: [{
+                    label: 'Enrollment Growth %',
+                    data: top10.map(d => d.growth),
+                    backgroundColor: top10.map(d => d.growth >= 0 ? 'rgba(66, 230, 149, 0.8)' : 'rgba(255, 107, 107, 0.8)'),
+                    borderColor: top10.map(d => d.growth >= 0 ? '#42e695' : '#ff6b6b'),
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                animation: false,
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.1)' },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Enrollment Table (Hierarchical)
+        let enrollmentTableHtml = `
+            <table id="enrollmentInteractiveTable">
+                <thead>
+                    <tr>
+                        <th>District / Block / School</th>
+                        <th>Enrollment 2024</th>
+                        <th>Enrollment 2025</th>
+                        <th>Change</th>
+                        <th>% Growth</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        const sortedDistricts = Object.keys(enrollmentStats).sort();
+
+        for (const dist of sortedDistricts) {
+            const distData = enrollmentStats[dist];
+            const distGrowth = distData.enrollment2024 > 0
+                ? ((distData.enrollment2025 - distData.enrollment2024) / distData.enrollment2024 * 100).toFixed(2)
+                : 0;
+            const distChange = distData.enrollment2025 - distData.enrollment2024;
+
+            enrollmentTableHtml += `
+                <tr class="district-row" onclick="toggleEnrollmentDistrict('${dist.replace(/'/g, "\\'")}')">
+                    <td class="clickable-cell">
+                        <div class="expandable-name">
+                            <span class="expand-arrow" id="arrow-enroll-dist-${dist.replace(/[^a-zA-Z0-9]/g, '_')}"></span>
+                            <strong>${dist}</strong>
+                        </div>
+                    </td>
+                    <td>${distData.enrollment2024.toLocaleString()}</td>
+                    <td>${distData.enrollment2025.toLocaleString()}</td>
+                    <td style="color: ${distChange >= 0 ? '#42e695' : '#ff6b6b'}; font-weight: 600;">
+                        ${distChange >= 0 ? '+' : ''}${distChange.toLocaleString()}
+                    </td>
+                    <td><span class="percentage-badge" style="background: ${distGrowth >= 0 ? 'linear-gradient(45deg, #42e695, #3bb2b8)' : 'linear-gradient(45deg, #ff6b6b, #ee5a6f)'};">
+                        ${distGrowth >= 0 ? '+' : ''}${distGrowth}%
+                    </span></td>
+                </tr>
+            `;
+
+            // Block rows
+            const sortedBlocks = Object.keys(distData.blocks).sort();
+            for (const blk of sortedBlocks) {
+                const blockData = distData.blocks[blk];
+                const blockGrowth = blockData.enrollment2024 > 0
+                    ? ((blockData.enrollment2025 - blockData.enrollment2024) / blockData.enrollment2024 * 100).toFixed(2)
+                    : 0;
+                const blockChange = blockData.enrollment2025 - blockData.enrollment2024;
+
+                enrollmentTableHtml += `
+                    <tr class="block-row hidden-row enroll-district-${dist.replace(/[^a-zA-Z0-9]/g, '_')}" onclick="toggleEnrollmentBlock(event, '${dist.replace(/'/g, "\\'")}', '${blk.replace(/'/g, "\\'")}')">
+                        <td class="clickable-cell indent-1">
+                            <div class="expandable-name">
+                                <span class="expand-arrow" id="arrow-enroll-block-${dist.replace(/[^a-zA-Z0-9]/g, '_')}-${blk.replace(/[^a-zA-Z0-9]/g, '_')}"></span>
+                                <strong>${blk}</strong>
+                            </div>
+                        </td>
+                        <td>${blockData.enrollment2024.toLocaleString()}</td>
+                        <td>${blockData.enrollment2025.toLocaleString()}</td>
+                        <td style="color: ${blockChange >= 0 ? '#42e695' : '#ff6b6b'}; font-weight: 600;">
+                            ${blockChange >= 0 ? '+' : ''}${blockChange.toLocaleString()}
+                        </td>
+                        <td><span class="percentage-badge" style="background: ${blockGrowth >= 0 ? 'linear-gradient(45deg, #42e695, #3bb2b8)' : 'linear-gradient(45deg, #ff6b6b, #ee5a6f)'};">
+                            ${blockGrowth >= 0 ? '+' : ''}${blockGrowth}%
+                        </span></td>
+                    </tr>
+                `;
+
+                // School rows
+                const sortedSchools = Object.keys(blockData.schools).sort();
+                for (const school of sortedSchools) {
+                    const schoolData = blockData.schools[school];
+                    const schoolGrowth = schoolData.enrollment2024 > 0
+                        ? ((schoolData.enrollment2025 - schoolData.enrollment2024) / schoolData.enrollment2024 * 100).toFixed(2)
+                        : 0;
+                    const schoolChange = schoolData.enrollment2025 - schoolData.enrollment2024;
+
+                    enrollmentTableHtml += `
+                        <tr class="school-row hidden-row enroll-block-${dist.replace(/[^a-zA-Z0-9]/g, '_')}-${blk.replace(/[^a-zA-Z0-9]/g, '_')}">
+                            <td class="indent-2">${school}</td>
+                            <td>${schoolData.enrollment2024.toLocaleString()}</td>
+                            <td>${schoolData.enrollment2025.toLocaleString()}</td>
+                            <td style="color: ${schoolChange >= 0 ? '#42e695' : '#ff6b6b'}; font-weight: 600;">
+                                ${schoolChange >= 0 ? '+' : ''}${schoolChange.toLocaleString()}
+                            </td>
+                            <td><span class="percentage-badge" style="background: ${schoolGrowth >= 0 ? 'linear-gradient(45deg, #42e695, #3bb2b8)' : 'linear-gradient(45deg, #ff6b6b, #ee5a6f)'};">
+                                ${schoolGrowth >= 0 ? '+' : ''}${schoolGrowth}%
+                            </span></td>
+                        </tr>
+                    `;
+                }
+            }
+        }
+
+        enrollmentTableHtml += `</tbody></table>`;
+        document.getElementById('enrollmentTable').innerHTML = enrollmentTableHtml;
+    }
+
+    // Enrollment table toggle functions
+    function toggleEnrollmentDistrict(districtName) {
+        const districtId = districtName.replace(/[^a-zA-Z0-9]/g, '_');
+        const blockRows = document.querySelectorAll(`.enroll-district-${districtId}`);
+        const arrow = document.getElementById(`arrow-enroll-dist-${districtId}`);
+        const districtRow = arrow.closest('tr');
+
+        const isExpanded = !arrow.classList.contains('rotated');
+
+        if (isExpanded) {
+            arrow.classList.add('rotated');
+            districtRow.classList.add('expanded');
+            blockRows.forEach(row => {
+                row.classList.remove('hidden-row');
+            });
+        } else {
+            arrow.classList.remove('rotated');
+            districtRow.classList.remove('expanded');
+            blockRows.forEach(row => {
+                row.classList.add('hidden-row');
+                const blockArrow = row.querySelector('.expand-arrow');
+                if (blockArrow && blockArrow.classList.contains('rotated')) {
+                    blockArrow.classList.remove('rotated');
+                    row.classList.remove('expanded');
+                }
+            });
+
+            const allSchoolRows = document.querySelectorAll(`[class*="enroll-block-${districtId}-"]`);
+            allSchoolRows.forEach(row => {
+                if (row.classList.contains('school-row')) {
+                    row.classList.add('hidden-row');
+                }
+            });
+        }
+    }
+
+    function toggleEnrollmentBlock(event, districtName, blockName) {
+        event.stopPropagation();
+
+        const districtId = districtName.replace(/[^a-zA-Z0-9]/g, '_');
+        const blockId = blockName.replace(/[^a-zA-Z0-9]/g, '_');
+        const schoolRows = document.querySelectorAll(`.enroll-block-${districtId}-${blockId}`);
+        const arrow = document.getElementById(`arrow-enroll-block-${districtId}-${blockId}`);
+        const blockRow = arrow.closest('tr');
+
+        const isExpanded = !arrow.classList.contains('rotated');
+
+        if (isExpanded) {
+            arrow.classList.add('rotated');
+            blockRow.classList.add('expanded');
+            schoolRows.forEach(row => {
+                row.classList.remove('hidden-row');
+            });
+        } else {
+            arrow.classList.remove('rotated');
+            blockRow.classList.remove('expanded');
+            schoolRows.forEach(row => {
+                row.classList.add('hidden-row');
+            });
+        }
+    }
+
+    // Map functions - Dynamic state map generation
+    function generateStateMap(districtStats, stateName) {
+        // Update map title based on state
+        const stateMapTitle = document.getElementById('stateMapTitle');
+        if (stateMapTitle) {
+            stateMapTitle.textContent = `${stateName} District Relevance Map`;
+        }
+        
+        // Map of state names to GeoJSON URLs
+        const stateGeojsonUrls = {
+            'bihar': 'https://raw.githubusercontent.com/Vivek-M-08/maps/main/states/bihar.geojson',
+            'haryana': 'https://raw.githubusercontent.com/Vivek-M-08/maps/main/states/haryana.geojson'
+        };
+        
+        const stateKey = stateName.toLowerCase().trim();
+        
         const geojsonFile = document.getElementById('geojsonFile').files[0];
         if (geojsonFile) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 try { 
                     const geojson = JSON.parse(e.target.result); 
-                    renderBiharMap(geojson, districtStats); 
+                    renderStateMap(geojson, districtStats, stateName); 
                 } 
                 catch (error) { 
-                    document.getElementById('biharMap').innerHTML = `<div style="text-align: center; padding: 20px; color: #ff6b6b;">Invalid GeoJSON file format.</div>`; 
+                    document.getElementById('stateMap').innerHTML = `<div style="text-align: center; padding: 20px; color: #ff6b6b;">Invalid GeoJSON file format.</div>`; 
                 }
             };
             reader.readAsText(geojsonFile);
-        } else {
-            const geojsonUrl = 'https://raw.githubusercontent.com/Vivek-M-08/maps/main/states/bihar.geojson';
-            document.getElementById('biharMap').innerHTML = '<p style="text-align: center; color: #718096; padding: 20px;">Loading map...</p>';
+        } else if (stateGeojsonUrls[stateKey]) {
+            const geojsonUrl = stateGeojsonUrls[stateKey];
+            document.getElementById('stateMap').innerHTML = '<p style="text-align: center; color: #718096; padding: 20px;">Loading map...</p>';
             fetch(geojsonUrl, { mode: 'cors', headers: { 'Accept': 'application/json' } })
                 .then(response => { 
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); 
                     return response.json(); 
                 })
-                .then(geojson => { renderBiharMap(geojson, districtStats); })
+                .then(geojson => { renderStateMap(geojson, districtStats, stateName); })
                 .catch(error => { 
-                    console.error('Error loading Bihar GeoJSON:', error);
-                    document.getElementById('biharMap').innerHTML = `
+                    console.error(`Error loading ${stateName} GeoJSON:`, error);
+                    document.getElementById('stateMap').innerHTML = `
                         <div style="text-align: center; padding: 20px;">
-                            <p style="color: #718096; margin-bottom: 10px;">Unable to load map.</p>
-                            <p style="color: #718096; font-size: 0.9em; margin-bottom: 10px;">Please upload the bihar.geojson file and process again.</p>
-                            <button onclick="generateSimplifiedBiharMap()" style="margin-top: 10px; padding: 8px 16px; background: #4facfe; color: white; border: none; border-radius: 5px; cursor: pointer;">Or Load Simplified Map</button>
+                            <p style="color: #718096; margin-bottom: 10px;">Unable to load ${stateName} map.</p>
+                            <p style="color: #718096; font-size: 0.9em; margin-bottom: 10px;">Please upload the ${stateKey}.geojson file and process again.</p>
+                            <button onclick="generateSimplifiedStateMap()" style="margin-top: 10px; padding: 8px 16px; background: #4facfe; color: white; border: none; border-radius: 5px; cursor: pointer;">Or Load Simplified Map</button>
                         </div>
                     `;
                 });
+        } else {
+            // State not supported, show simplified map
+            document.getElementById('stateMap').innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <p style="color: #718096; margin-bottom: 10px;">${stateName} map not available.</p>
+                    <button onclick="generateSimplifiedStateMap()" style="margin-top: 10px; padding: 8px 16px; background: #4facfe; color: white; border: none; border-radius: 5px; cursor: pointer;">Load Simplified Map</button>
+                </div>
+            `;
         }
     }
 
-    window.generateSimplifiedBiharMap = function() {
-        renderSimplifiedBiharMap(window.currentDistrictStats || {});
+    window.generateSimplifiedStateMap = function() {
+        renderSimplifiedStateMap(window.currentDistrictStats || {});
     }
 
-    function renderSimplifiedBiharMap(districtStats) {
+    function renderSimplifiedStateMap(districtStats) {
         function getColorForPercentage(percentage) { 
             if (percentage >= 60) return '#42e695'; 
             if (percentage >= 40) return '#feca57'; 
@@ -1564,11 +2437,11 @@
             svgContent += `<text x="${d.x + d.w/2}" y="${d.y + d.h/2}" fill="white" font-size="8" text-anchor="middle" dominant-baseline="middle" style="pointer-events: none; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">${districtName.split(' ')[0]}</text>`; 
         }
         svgContent += '</svg>';
-        document.getElementById('biharMap').innerHTML = svgContent; 
+        document.getElementById('stateMap').innerHTML = svgContent; 
         addTooltipHandlers();
     }
 
-    function renderBiharMap(geojson, districtStats) {
+    function renderStateMap(geojson, districtStats, stateName) {
         function getColorForPercentage(percentage) { 
             if (percentage >= 60) return '#42e695'; 
             if (percentage >= 40) return '#feca57'; 
@@ -1599,7 +2472,7 @@
         });
         
         if (!(isFinite(minX) && isFinite(minY) && isFinite(maxX) && isFinite(maxY))) { 
-            document.getElementById('biharMap').innerHTML = '<div style="padding:20px; color:#ff6b6b;">Invalid GeoJSON geometry.</div>'; 
+            document.getElementById('stateMap').innerHTML = '<div style="padding:20px; color:#ff6b6b;">Invalid GeoJSON geometry.</div>'; 
             return; 
         }
         
@@ -1640,7 +2513,7 @@
             svgContent += `<path class="district-path" d="${pathData}" fill="${color}" data-district="${districtName}" data-tooltip="${tooltipText}"></path>`; 
         });
         svgContent += '</svg>';
-        document.getElementById('biharMap').innerHTML = svgContent; 
+        document.getElementById('stateMap').innerHTML = svgContent; 
         addTooltipHandlers();
     }
 
@@ -1651,7 +2524,7 @@
             tooltip.className = 'district-tooltip'; 
             document.body.appendChild(tooltip); 
         }
-        const paths = document.querySelectorAll('#biharMap .district-path');
+        const paths = document.querySelectorAll('#stateMap .district-path');
         paths.forEach(path => {
             path.addEventListener('mouseenter', (e) => { 
                 tooltip.innerHTML = e.target.dataset.tooltip.replace(/\n/g, '<br>'); 
@@ -1685,16 +2558,18 @@
         loadingDiv.innerHTML = '<div><div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #4facfe; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>Generating PDF...</div>';
         document.body.appendChild(loadingDiv);
 
-        const mapContainer = document.getElementById('biharMap');
-        const originalMapHTML = mapContainer.innerHTML;
+        const mapContainer = document.getElementById('stateMap');
+        const originalMapHTML = mapContainer ? mapContainer.innerHTML : '';
         
-        mapContainer.innerHTML = `
-            <div style="width: 100%; height: 500px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border: 1px dashed #ccc; border-radius: 8px;">
-                <p style="color: #666; font-size: 16px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                    Map is available in the interactive HTML report.
-                </p>
-            </div>
-        `;
+        if (mapContainer) {
+            mapContainer.innerHTML = `
+                <div style="width: 100%; height: 500px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border: 1px dashed #ccc; border-radius: 8px;">
+                    <p style="color: #666; font-size: 16px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                        Map is available in the interactive HTML report.
+                    </p>
+                </div>
+            `;
+        }
 
         setTimeout(() => {
             const contentWidthPx = element.offsetWidth;
@@ -1726,8 +2601,10 @@
             };
 
             html2pdf().set(opt).from(element).save().finally(() => {
-                mapContainer.innerHTML = originalMapHTML;
-                addTooltipHandlers();
+                if (mapContainer && originalMapHTML) {
+                    mapContainer.innerHTML = originalMapHTML;
+                    addTooltipHandlers();
+                }
                 if (loadingDiv) loadingDiv.remove();
             });
         }, 100);
@@ -1800,7 +2677,75 @@
             });
         }
     }
-    
+
+    // Custom Tasks toggle functions
+    function toggleCustomTaskDistrict(districtName) {
+        const districtId = districtName.replace(/[^a-zA-Z0-9]/g, '_');
+        const blockRows = document.querySelectorAll(`.ct-district-${districtId}`);
+        const arrow = document.getElementById(`arrow-ct-dist-${districtId}`);
+        const districtRow = arrow.closest('tr');
+
+        const isExpanded = !arrow.classList.contains('rotated');
+
+        if (isExpanded) {
+            // Expand
+            arrow.classList.add('rotated');
+            districtRow.classList.add('expanded');
+            blockRows.forEach(row => {
+                row.classList.remove('hidden-row');
+            });
+        } else {
+            // Collapse
+            arrow.classList.remove('rotated');
+            districtRow.classList.remove('expanded');
+            blockRows.forEach(row => {
+                row.classList.add('hidden-row');
+                // Also collapse any expanded blocks
+                const blockArrow = row.querySelector('.expand-arrow');
+                if (blockArrow && blockArrow.classList.contains('rotated')) {
+                    blockArrow.classList.remove('rotated');
+                    row.classList.remove('expanded');
+                }
+            });
+
+            // Hide all schools under this district
+            const allSchoolRows = document.querySelectorAll(`[class*="ct-block-${districtId}-"]`);
+            allSchoolRows.forEach(row => {
+                if (row.classList.contains('school-row')) {
+                    row.classList.add('hidden-row');
+                }
+            });
+        }
+    }
+
+    function toggleCustomTaskBlock(event, districtName, blockName) {
+        event.stopPropagation(); // Prevent district toggle
+
+        const districtId = districtName.replace(/[^a-zA-Z0-9]/g, '_');
+        const blockId = blockName.replace(/[^a-zA-Z0-9]/g, '_');
+        const schoolRows = document.querySelectorAll(`.ct-block-${districtId}-${blockId}`);
+        const arrow = document.getElementById(`arrow-ct-block-${districtId}-${blockId}`);
+        const blockRow = arrow.closest('tr');
+
+        const isExpanded = !arrow.classList.contains('rotated');
+
+        if (isExpanded) {
+            // Expand
+            arrow.classList.add('rotated');
+            blockRow.classList.add('expanded');
+            schoolRows.forEach(row => {
+                row.classList.remove('hidden-row');
+            });
+        } else {
+            // Collapse
+            arrow.classList.remove('rotated');
+            blockRow.classList.remove('expanded');
+            schoolRows.forEach(row => {
+                row.classList.add('hidden-row');
+            });
+        }
+    }
+
     // Event Listeners
     document.getElementById('csvFile').addEventListener('change', function(e) {
         const fileName = e.target.files[0]?.name || 'Choose CSV File';
