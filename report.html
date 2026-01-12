@@ -797,7 +797,7 @@
     // Check if a task is user-owned (custom) based on Task Type column
     function isUserOwnedTask(row) {
         const taskType = row["Task Type"];
-        return taskType && taskType !== "Standard";
+        return taskType && taskType == "User-Owned";
     }
 
     // Utility functions (unchanged)
